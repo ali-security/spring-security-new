@@ -44,7 +44,7 @@ jobs:
           mkdir -p ~/.gradle
           echo 'systemProp.user.name=spring-builds+github' >> ~/.gradle/gradle.properties
       - name: Cache Gradle packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}

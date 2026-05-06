@@ -15,7 +15,6 @@ env:
   COMMIT_SHA: ${{ github.sha }}
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
   ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-  RUN_JOBS: ${{ github.repository == 'spring-projects/spring-security' }}
 
 jobs:
   prerequisites:
@@ -26,8 +25,7 @@ jobs:
     steps:
       - id: continue
         name: Determine if should continue
-        if: env.RUN_JOBS == 'true'
-        run: echo "::set-output name=runjobs::true"
+        run: echo "runjobs=true" >>$GITHUB_OUTPUT
   build_jdk_11:
     name: Build JDK 11
     needs: [prerequisites]
@@ -57,6 +55,12 @@ jobs:
           GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_SECRET_ACCESS_KEY }}
         run: ./gradlew clean build --continue -PartifactoryUsername="$ARTIFACTORY_USERNAME" -PartifactoryPassword="$ARTIFACTORY_PASSWORD"
+      - name: Upload build artifacts
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-jars
+          path: '**/build/libs/*.jar'
   snapshot_tests:
     name: Test against snapshots
     needs: [prerequisites]

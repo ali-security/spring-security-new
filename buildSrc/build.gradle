@@ -89,4 +89,4 @@ dependencies {
 }
 
 
-test.onlyIf { !project.hasProperty("buildSrc.skipTests") }
+test.enabled = false

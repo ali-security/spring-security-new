@@ -31,10 +31,7 @@ jobs:
   build_jdk_11:
     name: Build JDK 11
     needs: [prerequisites]
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     if: needs.prerequisites.outputs.runjobs
     steps:
       - uses: actions/checkout@v2
@@ -58,7 +55,6 @@ jobs:
           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_SECRET_ACCESS_KEY }}
         run: ./gradlew clean build --continue -PartifactoryUsername="$ARTIFACTORY_USERNAME" -PartifactoryPassword="$ARTIFACTORY_PASSWORD"
       - name: Upload build artifacts
-        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: built-jars

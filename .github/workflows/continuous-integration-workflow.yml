@@ -17,6 +17,7 @@ env:
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
   ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
+
 jobs:
   prerequisites:
     name: Pre-requisites for building
